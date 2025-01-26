@@ -1,0 +1,47 @@
+name: barodestash
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  uuid: ^3.0.4
+  provider: ^6.0.0
+  barcode_widget: ^2.0.1
+  shared_preferences: ^2.0.6
+  image_picker: ^0.8.4
+  barcode: ^2.1.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+    - assets/images/barcode_drawer.png
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-VariableFont_wght.ttf
+    
+    - family : Barlow
+      fonts:
+        - asset: assets/fonts/Barlow/Barlow-Medium.ttf
+        - asset: assets/fonts/Barlow/Barlow-Bold.ttf
+        - asset: assets/fonts/Barlow/Barlow-ExtraBold.ttf
+        - asset: assets/fonts/Barlow/Barlow-Black.ttf
+
+    - family : Roboto
+      fonts:
+        - asset: assets/fonts/RobotoSlab-VariableFont_wght.ttf
