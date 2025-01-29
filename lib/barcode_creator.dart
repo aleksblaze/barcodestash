@@ -39,7 +39,7 @@ class _BarcodeCreatorState extends State<BarcodeCreatorPage> {
     } else if (RegExp(r'^[0-9A-Z]{1,128}$').hasMatch(code)) {
       _barcodeType = 'Code 128';
     } else {
-      _barcodeType = 'QR Code';
+      _barcodeType = 'EAN-128';
     }
   }
 
