@@ -33,7 +33,7 @@ class BarcodeIn {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       code: json['code'] ?? '',
-      type: json['type'] ?? 'EAN-13',
+      type: json['type'] ?? 'GS1-128',
       color: Color(json['color'] ?? 0xFFFFFFFF), // Retrieve color from integer
       imageUrl: json['imageUrl'] ?? '',
     );

@@ -215,8 +215,13 @@ class _BarcodeDetailsPageState extends State<BarcodeDetailsPage> {
       case 'Code 128':
         return Barcode.code128();
       case 'EAN-13':
-      default:
         return Barcode.ean13();
+      case 'EAN-8':
+        return Barcode.upcA();
+      case 'ITF-14':
+        return Barcode.itf14();
+      default:
+        return Barcode.gs128();
     }
   }
 }

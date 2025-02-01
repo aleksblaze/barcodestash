@@ -14,8 +14,9 @@ class _BarcodeCreatorState extends State<BarcodeCreatorPage> {
   String _imageUrl = '';
   String _barcodeName = '';
   String _barcodeCode = '';
-  String _barcodeType = 'EAN-13'; // Default barcode type
-  Color _barcodeColor = Colors.primaries[Random().nextInt(Colors.primaries.length)]; // Generate random color
+  String _barcodeType = 'GS1-128'; // Default barcode type
+  Color _barcodeColor = Colors.primaries[
+      Random().nextInt(Colors.primaries.length)]; // Generate random color
 
   final TextEditingController _barcodeNameController = TextEditingController();
   final TextEditingController _barcodeCodeController = TextEditingController();
@@ -28,18 +29,26 @@ class _BarcodeCreatorState extends State<BarcodeCreatorPage> {
   }
 
   void _detectBarcodeType(String code) {
-    if (RegExp(r'^[0-9]{13}$').hasMatch(code)) {
+    if (RegExp(r'^[0-9]{12}$').hasMatch(code)) {
       _barcodeType = 'EAN-13';
-    } else if (RegExp(r'^[0-9]{12}$').hasMatch(code)) {
-      _barcodeType = 'UPC-A';
+      return;
+    } else if (RegExp(r'^[0-9]{13}$').hasMatch(code)) {
+      _barcodeType = 'EAN-13';
+      return;
     } else if (RegExp(r'^[0-9]{8}$').hasMatch(code)) {
       _barcodeType = 'EAN-8';
+      return;
     } else if (RegExp(r'^[0-9]{14}$').hasMatch(code)) {
       _barcodeType = 'ITF-14';
+      return;
     } else if (RegExp(r'^[0-9A-Z]{1,128}$').hasMatch(code)) {
       _barcodeType = 'Code 128';
+      return;
+    } else if (RegExp(r'^\(\d{2}\)[0-9A-Z]{1,128}$').hasMatch(code)) {
+      _barcodeType = 'GS1-128';
+      return;
     } else {
-      _barcodeType = 'EAN-128';
+      _barcodeType = 'Unknown';
     }
   }
 
@@ -59,84 +68,90 @@ class _BarcodeCreatorState extends State<BarcodeCreatorPage> {
                 },
               ),
             ),
-              Padding(
-                padding: const EdgeInsets.all(16.0) + const EdgeInsets.only(top: 50.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Enter the store name and the number for your card',
-                      style: TextStyle(
+            Padding(
+              padding:
+                  const EdgeInsets.all(16.0) + const EdgeInsets.only(top: 50.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Enter the store name and the number for your card',
+                    style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Barlow',
                       fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
-                    TextField(
-                      controller: _barcodeNameController,
-                      decoration: InputDecoration(
-                        labelText: 'Barcode Name',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _barcodeName = value;
-                        });
-                      },
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: _barcodeNameController,
+                    decoration: InputDecoration(
+                      labelText: 'Barcode Name',
+                      border: OutlineInputBorder(),
                     ),
-                    SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Barcode Code',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _barcodeCode = value;
-                          _detectBarcodeType(value);
-                        });
-                      },
+                    onChanged: (value) {
+                      setState(() {
+                        _barcodeName = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Barcode Code',
+                      border: OutlineInputBorder(),
                     ),
-                    SizedBox(height: 20),
-                    Center(
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                          ),
-                          onPressed: () {
-                            if (_barcodeName.isNotEmpty && _barcodeCode.isNotEmpty) {
-                              final newBarcode = BarcodeIn(
-                                id: Uuid().v4(),
-                                name: _barcodeName,
-                                code: _barcodeCode,
-                                type: _barcodeType,
-                                color: _barcodeColor,
-                                imageUrl: _imageUrl,
-                              );
-                              // Save the new barcode
-                              Provider.of<BarcodeProvider>(context, listen: false).addBarcode(newBarcode);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Barcode saved successfully')),
-                              );
-                              Navigator.pop(context);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Please enter both barcode name and code')),
-                              );
-                            }
-                          },
-                          child: Text('Save'),
+                    onChanged: (value) {
+                      setState(() {
+                        _barcodeCode = value;
+                        _detectBarcodeType(value);
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
                         ),
+                        onPressed: () {
+                          if (_barcodeName.isNotEmpty &&
+                              _barcodeCode.isNotEmpty) {
+                            final newBarcode = BarcodeIn(
+                              id: Uuid().v4(),
+                              name: _barcodeName,
+                              code: _barcodeCode,
+                              type: _barcodeType,
+                              color: _barcodeColor,
+                              imageUrl: _imageUrl,
+                            );
+                            // Save the new barcode
+                            Provider.of<BarcodeProvider>(context, listen: false)
+                                .addBarcode(newBarcode);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Barcode saved successfully')),
+                            );
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      'Please enter both barcode name and code')),
+                            );
+                          }
+                        },
+                        child: Text('Save'),
                       ),
                     ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
+            ),
           ],
         ),
       ),
