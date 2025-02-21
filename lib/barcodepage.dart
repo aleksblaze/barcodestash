@@ -51,8 +51,6 @@ class _BarcodePageState extends State<BarcodePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(9.0),
                     ),
-                    elevation: 4.0,
-                    shadowColor: Colors.black54,
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -67,37 +65,50 @@ class _BarcodePageState extends State<BarcodePage> {
                           }
                         });
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        child: Stack(
                         children: [
                           if (imageUrl.isNotEmpty)
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(9.0),
-                                topRight: Radius.circular(9.0),
-                              ),
-                              child: Image.file(
-                                File(imageUrl),
-                                height: 95.0,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          else
-                            Text(
-                              barcode.name[0], // First letter of the name
-                              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(9.0),
+                            child: Image.file(
+                            File(imageUrl),
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
                             ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4.0),
-                            child: Text(
-                              barcode.name,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          )
+                          else
+                          Container(
+                            decoration: BoxDecoration(
+                            color: barcode.color,
+                            borderRadius: BorderRadius.circular(9.0),
+                            ),
+                            child: Center(
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text(
+                                barcode.name[0], // First letter of the name
+                                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white),
+                              ),
+                              ),
+                            ),
+                            
                             ),
                           ),
+                          Positioned(
+                          bottom: 5.0,
+                          left: 8.0,
+                          right: 8.0,
+                          child: Text(
+                            barcode.name,
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          ),
                         ],
-                      ),
+                        ),
                     ),
                   );
                 },

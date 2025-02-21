@@ -3,6 +3,7 @@ import 'package:barodestash/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'shopping_provider.dart';
 import 'barcode_provider.dart';
 import 'menu.dart';
 import 'barcode_creator.dart';
@@ -11,6 +12,10 @@ import 'settings.dart';
 import 'about.dart';
 import 'barcode_details.dart';
 import 'info.dart';
+import 'shopping_lists_screen.dart';
+import 'shopping_provider.dart';
+import 'shopping_provider.dart';
+import 'shopping_lists_screen.dart';
 
 void main() {
   runApp(
@@ -27,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BarcodeProvider()),
+        ChangeNotifierProvider(create: (_) => ShoppingProvider()),
       ],
       builder: (context, child) {
         return MaterialApp(
@@ -40,6 +46,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => HomeScreen(),
             '/menu' : (context) => MenuPage(),
+            '/shopping': (context) => ShoppingListsScreen(),
             '/barcodepage': (context) => BarcodePage(),
             '/settings': (context) => SettingsPage(),
             '/about': (context) => AboutPage(),
@@ -62,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomeContent(),
+    ShoppingListsScreen(),
     MenuPage(),
     BarcodeCreatorPage(),
     BarcodePage(),
@@ -119,8 +127,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                _selectedIndex == 1 ? Icons.account_circle : Icons.account_circle_outlined,
+                _selectedIndex == 1 ? Icons.list_alt : Icons.list_alt_outlined,
                 color: _selectedIndex == 1 ? Colors.black : Colors.grey,
+              ),
+              label: 'Buy list',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                _selectedIndex == 2 ? Icons.account_circle : Icons.account_circle_outlined,
+                color: _selectedIndex == 2 ? Colors.black : Colors.grey,
               ),
               label: 'Account',
             ),
